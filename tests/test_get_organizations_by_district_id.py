@@ -1,0 +1,20 @@
+import pytest
+from rest_framework import status
+
+
+@pytest.mark.django_db
+def test_get_organization_by_district(created_district, created_organization, authenticated_client):
+    response = authenticated_client.get(f'/api/organizations/{created_district.pk}/')
+
+    assert response.status_code == status.HTTP_200_OK
+
+
+@pytest.mark.django_db
+def test_return_404_on_get_organization_by_not_exists_district(
+    created_district,
+    created_organization,
+    authenticated_client,
+):
+    response = authenticated_client.get(f'/api/organizations/{created_district.pk-1}/')
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
